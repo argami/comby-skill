@@ -1,5 +1,7 @@
 # Memory Layer Summary - Quick Reference
 
+> 📖 **Para comparativa detallada** (antes/después con grep/rg vs Comby), consulta [Workflow Comparison](../01-GETTING-STARTED/WORKFLOW_COMPARISON.md) con 4 casos reales.
+
 ## What is the Memory Layer?
 
 A **persistent, embedded knowledge system** that remembers patterns detected across analyses of a single repository.

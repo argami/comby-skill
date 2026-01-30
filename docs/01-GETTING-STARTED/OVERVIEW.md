@@ -1,5 +1,7 @@
 # Comby Skill: Pattern Families Summary
 
+> 📖 **¿Cómo Comby mejora tu flujo de trabajo?** Consulta [Workflow Comparison](./WORKFLOW_COMPARISON.md) para ver casos concretos con mejora de velocidad de 4x a 22x comparado con grep/rg + análisis manual.
+
 ## Quick Reference: 13 Pattern Families (3 Phases)
 
 ### 🎯 Phase 1: MVP Extended (Weeks 1-3) - 6 Families

@@ -1,5 +1,7 @@
 # Comby Skill Memory Layer Design
 
+> 💡 **¿Cómo Comby mejora tu flujo de trabajo?** Consulta [Workflow Comparison](../01-GETTING-STARTED/WORKFLOW_COMPARISON.md) para ver casos reales de uso (antes/después con grep/rg vs Comby + Memory)
+
 ## Objetivo
 Crear una capa de memoria **ligera, embebida y persistente** para Comby Skill que permita:
 1. **Almacenar resultados de análisis** de un repositorio único a través del tiempo

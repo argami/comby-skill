@@ -20,7 +20,6 @@ with describe("CLI") as it:
                 ["python", "-m", "comby_skill.cli", "analyze", temp_file],
                 capture_output=True,
                 text=True,
-                cwd="/Users/argami/Documents/workspace/AI/comby-skill",
             )
 
             # Validate output

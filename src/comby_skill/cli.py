@@ -2,10 +2,12 @@
 
 import argparse
 import sys
+import time
 from pathlib import Path
 from typing import List
 
 from comby_skill.pattern_matcher import PatternMatcher
+from comby_skill.search_engine import SearchEngine, OutputFormatter
 
 
 def main(args: List[str] = None) -> int:
@@ -19,12 +21,76 @@ def main(args: List[str] = None) -> int:
     """
     parser = argparse.ArgumentParser(
         prog='comby-skill',
-        description='Detect code vulnerabilities and patterns using pattern matching'
+        description='Comby Skill: Code search and pattern detection'
     )
 
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
-    # Analyze subcommand
+    # Search subcommand (primary grep-like interface)
+    search_parser = subparsers.add_parser(
+        'search',
+        help='Search for patterns in files (grep-like interface)'
+    )
+    search_parser.add_argument(
+        'pattern',
+        type=str,
+        help='Regex pattern to search for'
+    )
+    search_parser.add_argument(
+        'path',
+        nargs='?',
+        default='.',
+        help='Root path to search (default: current directory)'
+    )
+    search_parser.add_argument(
+        '-r', '--recursive',
+        action='store_true',
+        default=True,
+        help='Recursively search subdirectories (default: true)'
+    )
+    search_parser.add_argument(
+        '-i', '--case-insensitive',
+        action='store_true',
+        help='Case-insensitive search'
+    )
+    search_parser.add_argument(
+        '--include',
+        type=str,
+        default='*',
+        help='File glob pattern to include (default: *)'
+    )
+    search_parser.add_argument(
+        '--exclude',
+        type=str,
+        help='File glob pattern to exclude'
+    )
+    search_parser.add_argument(
+        '-f', '--format',
+        choices=['default', 'json', 'csv', 'lines', 'count'],
+        default='default',
+        help='Output format (default: default)'
+    )
+    search_parser.add_argument(
+        '-C', '--context',
+        type=int,
+        default=0,
+        metavar='NUM',
+        help='Lines of context before/after match (default: 0)'
+    )
+    search_parser.add_argument(
+        '-m', '--max-results',
+        type=int,
+        default=100,
+        metavar='NUM',
+        help='Maximum results to return (default: 100)'
+    )
+    search_parser.add_argument(
+        '-c', '--count',
+        action='store_true',
+        help='Count matches instead of listing them'
+    )
+
+    # Analyze subcommand (legacy pattern detection)
     analyze_parser = subparsers.add_parser(
         'analyze',
         help='Analyze a file for vulnerabilities and patterns'
@@ -37,7 +103,9 @@ def main(args: List[str] = None) -> int:
 
     parsed_args = parser.parse_args(args)
 
-    if parsed_args.command == 'analyze':
+    if parsed_args.command == 'search':
+        return search(parsed_args)
+    elif parsed_args.command == 'analyze':
         return analyze(parsed_args.filepath)
     else:
         parser.print_help()
@@ -90,6 +158,72 @@ def analyze(filepath: str) -> int:
         print(f"   Line {match['line_number']}: {match['code']}")
         print()
 
+    return 0
+
+
+def search(args) -> int:
+    """Search for patterns in files (grep-like interface).
+
+    Args:
+        args: Parsed command-line arguments
+
+    Returns:
+        Exit code (0 for success, 1 for errors)
+    """
+    pattern = args.pattern
+    path = args.path
+
+    # Validate path exists
+    search_path = Path(path)
+    if not search_path.exists():
+        print(f"Error: Path not found: {path}", file=sys.stderr)
+        return 1
+
+    # Create search engine
+    try:
+        engine = SearchEngine(pattern, case_insensitive=args.case_insensitive)
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+    # Execute search
+    start_time = time.time()
+    try:
+        results = engine.search(
+            root_path=path,
+            recursive=args.recursive,
+            include_pattern=args.include,
+            exclude_pattern=args.exclude,
+            context_lines=args.context,
+            max_results=args.max_results,
+        )
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+    elapsed_time_ms = (time.time() - start_time) * 1000
+
+    # Format output
+    if args.count:
+        output = str(len(results))
+    else:
+        if args.format == 'default':
+            output = OutputFormatter.format_default(results, elapsed_time_ms)
+        elif args.format == 'json':
+            output = OutputFormatter.format_json(results, elapsed_time_ms)
+        elif args.format == 'csv':
+            output = OutputFormatter.format_csv(results)
+        elif args.format == 'lines':
+            output = OutputFormatter.format_lines(results)
+        elif args.format == 'count':
+            output = OutputFormatter.format_count(results)
+        else:
+            output = OutputFormatter.format_default(results, elapsed_time_ms)
+
+    print(output)
     return 0
 
 

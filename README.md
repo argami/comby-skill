@@ -2,6 +2,8 @@
 
 Code pattern analysis tool with Claude AI integration.
 
+**Repository**: https://github.com/argami/comby-skill
+
 ## Quick Start
 
 ### Installation
@@ -28,6 +30,7 @@ This project uses:
 - **Ivoire** - BDD testing framework
 - **Ruff** - Linting and formatting
 - **TDD** - Test-driven development approach
+- **GitHub Actions** - Automated testing on push/PR
 
 ### Workflow
 
@@ -36,7 +39,17 @@ This project uses:
 3. Implement minimal code (GREEN state - specs pass)
 4. Refactor if needed (CLEAN)
 5. Commit with descriptive message
-6. Repeat
+6. Push to GitHub (triggers CI/CD automatically)
+7. Repeat
+
+### CI/CD
+
+Specs run automatically on:
+- **Push to main**: GitHub Actions runs the test workflow
+- **Pull Requests**: All PRs must pass specs before merging
+- **Python versions**: Tests run on Python 3.10, 3.11, and 3.12
+
+View workflow status: [GitHub Actions](https://github.com/argami/comby-skill/actions)
 
 ## Architecture
 

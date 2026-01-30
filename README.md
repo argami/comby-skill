@@ -53,9 +53,30 @@ comby-skill/
 └── example_vulnerable.py      # Demo file
 ```
 
+## Quick Demo
+
+Try the CLI on the example vulnerable file:
+
+```bash
+comby-skill analyze example_vulnerable.py
+```
+
+This will output:
+- 🔴 **CRITICAL** issues: SQL injection vulnerabilities
+- 🟡 **MEDIUM** issues: Missing type hints
+
 ## Patterns Supported
 
-- **SQL Injection** - String concatenation in SQL queries
-- **Missing Type Hints** - Functions without type annotations
-- **Collections Import** - Deprecated collections imports
-- *More coming...*
+- **SQL Injection** - String concatenation in SQL queries (CRITICAL)
+- **Missing Type Hints** - Functions without return type annotations (MEDIUM)
+- *More patterns coming in next iterations...*
+
+## Project Status
+
+✅ **Phase 1 (MVP) Complete**:
+- PatternMatcher class with 2 pattern detectors
+- CLI tool with `analyze` command
+- Full test coverage with Ivoire BDD specs
+- Working E2E demo
+
+🚀 **Ready for**: Early feedback, pattern expansion, integration with Claude

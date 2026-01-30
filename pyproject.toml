@@ -9,7 +9,7 @@ description = "Code pattern analysis with Claude AI"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
-    {name = "argami", email = "argami@workspace"}
+    {name = "argami", email = "argami@example.com"}
 ]
 dependencies = [
     "requests>=2.31.0",

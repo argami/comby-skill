@@ -110,15 +110,15 @@
 
 ### Task Group 2.3: Pattern Integration (Dependency: 2.1 + 2.2 complete)
 
-- [ ] **2.3.1 Refactor PatternMatcher** (phase-2-integration-01)
+- [x] **2.3.1 Refactor PatternMatcher** (phase-2-integration-01)
   > **Implementation**: Edit `src/comby_skill/pattern_matcher.py`
   > **Details**: Refactor to support pattern families: add `register_pattern(pattern_class)` method, add `get_patterns_by_category(category)` method, add `run_family(family_name, path)` method. Use registry pattern with decorators
 
-- [ ] **2.3.2 Update CLI with new flags** (phase-2-integration-02)
+- [x] **2.3.2 Update CLI with new flags** (phase-2-integration-02)
   > **Implementation**: Edit `src/comby_skill/cli.py`
   > **Details**: Add: `--focus PATTERN_FAMILY` flag to run specific family, `--list-patterns` command to list available, `--severity FILTER` to filter by severity, `--category FILTER` to filter by category. Update help text
 
-- [ ] **2.3.3 Add tests for new patterns** (phase-2-integration-03)
+- [x] **2.3.3 Add tests for new patterns** (phase-2-integration-03)
   > **Implementation**: Create `spec/patterns_spec.py`
   > **Details**: Add Ivoire BDD specs for: DATABASE_ACCESS (3 scenarios), HTTP_ENDPOINTS (3 scenarios), AUTH_BOUNDARIES (3 scenarios), EXTERNAL_DEPENDENCIES (2 scenarios), CODE_COMPLEXITY (2 scenarios), CODE_DUPLICATION (2 scenarios), ERROR_HANDLING (2 scenarios). Follow existing spec pattern in spec/search_spec.py
 

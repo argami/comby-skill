@@ -100,27 +100,66 @@ def main(args: List[str] = None) -> int:
         type=str,
         help='Path to the Python file to analyze'
     )
+    analyze_parser.add_argument(
+        '--focus',
+        type=str,
+        choices=['security', 'database', 'http', 'auth', 'quality', 'all'],
+        default='all',
+        help='Focus area for analysis (default: all)'
+    )
+    analyze_parser.add_argument(
+        '--severity',
+        type=str,
+        choices=['critical', 'high', 'medium', 'low', 'all'],
+        default='all',
+        help='Filter by severity level (default: all)'
+    )
+    analyze_parser.add_argument(
+        '--category',
+        type=str,
+        help='Filter by category (e.g., sql_injection, xss)'
+    )
+
+    # List patterns subcommand
+    list_parser = subparsers.add_parser(
+        'list-patterns',
+        help='List available pattern families'
+    )
+    list_parser.add_argument(
+        '--category',
+        type=str,
+        help='Filter by category (security, code, quality, api, database)'
+    )
+    list_parser.add_argument(
+        '--format',
+        choices=['default', 'json'],
+        default='default',
+        help='Output format (default: default)'
+    )
 
     parsed_args = parser.parse_args(args)
 
     if parsed_args.command == 'search':
         return search(parsed_args)
     elif parsed_args.command == 'analyze':
-        return analyze(parsed_args.filepath)
+        return analyze(parsed_args)
+    elif parsed_args.command == 'list-patterns':
+        return list_patterns(parsed_args)
     else:
         parser.print_help()
         return 1
 
 
-def analyze(filepath: str) -> int:
+def analyze(args) -> int:
     """Analyze a file for vulnerabilities.
 
     Args:
-        filepath: Path to the file to analyze
+        args: Parsed command-line arguments
 
     Returns:
         Exit code (0 if successful, 1 if file not found or error)
     """
+    filepath = args.filepath
     file_path = Path(filepath)
 
     if not file_path.exists():
@@ -140,10 +179,59 @@ def analyze(filepath: str) -> int:
 
     # Detect patterns
     matcher = PatternMatcher()
-    sql_matches = matcher.detect_sql_injection(code)
-    type_hints_matches = matcher.detect_missing_type_hints(code)
 
-    all_matches = sql_matches + type_hints_matches
+    # Get focus and filters
+    focus = getattr(args, 'focus', 'all')
+    severity_filter = getattr(args, 'severity', 'all')
+    category_filter = getattr(args, 'category', None)
+
+    # Run pattern families based on focus
+    all_matches = []
+
+    if focus in ('all', 'security'):
+        sql_matches = matcher.detect_sql_injection(code)
+        all_matches.extend(sql_matches)
+
+    if focus in ('all', 'quality'):
+        type_hints_matches = matcher.detect_missing_type_hints(code)
+        all_matches.extend(type_hints_matches)
+
+    # Run additional pattern families if available
+    if focus == 'all' or focus == 'database':
+        db_results = matcher.run_family('database_access', filepath)
+        if db_results:
+            all_matches.extend(db_results)
+
+    if focus == 'all' or focus == 'http':
+        http_results = matcher.run_family('http_endpoints', filepath)
+        if http_results:
+            all_matches.extend(http_results)
+
+    if focus == 'all' or focus == 'auth':
+        auth_results = matcher.run_family('auth_boundaries', filepath)
+        if auth_results:
+            all_matches.extend(auth_results)
+
+    if focus == 'all' or focus == 'security':
+        ext_results = matcher.run_family('external_deps', filepath)
+        if ext_results:
+            all_matches.extend(ext_results)
+
+    # Filter by severity
+    if severity_filter != 'all':
+        severity_order = {'critical': 4, 'high': 3, 'medium': 2, 'low': 1}
+        min_level = severity_order.get(severity_filter, 0)
+        all_matches = [
+            m for m in all_matches
+            if severity_order.get(m.get('severity', '').lower(), 0) >= min_level
+        ]
+
+    # Filter by category
+    if category_filter:
+        all_matches = [
+            m for m in all_matches
+            if category_filter in m.get('pattern', '').lower()
+        ]
 
     if not all_matches:
         print(f"No vulnerabilities detected in {filepath}")
@@ -224,6 +312,36 @@ def search(args) -> int:
             output = OutputFormatter.format_default(results, elapsed_time_ms)
 
     print(output)
+    return 0
+
+
+def list_patterns(args) -> int:
+    """List available pattern families.
+
+    Args:
+        args: Parsed command-line arguments
+
+    Returns:
+        Exit code (0 for success)
+    """
+    matcher = PatternMatcher()
+
+    families = matcher.list_available_families()
+
+    if args.category:
+        families = matcher.get_patterns_by_category(args.category)
+
+    if args.format == 'json':
+        import json
+        print(json.dumps({"families": families, "count": len(families)}, indent=2))
+    else:
+        print("Available Pattern Families:")
+        print("=" * 40)
+        for family in families:
+            print(f"  - {family}")
+        print()
+        print(f"Total: {len(families)} families")
+
     return 0
 
 

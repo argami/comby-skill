@@ -1,0 +1,131 @@
+{
+  "name": "comby-skill",
+  "displayName": "Comby Pattern Search & Analysis",
+  "description": "Pattern matching and code analysis skill for Claude Code. Search code patterns, analyze for vulnerabilities, and generate code inventories.",
+  "version": "1.0.0",
+  "author": {
+    "name": "argami",
+    "email": "contact@example.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/argami/comby-skill",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/argami/comby-skill"
+  },
+  "engines": {
+    "claude-code": ">=1.0.0"
+  },
+  "keywords": [
+    "pattern-matching",
+    "code-search",
+    "security-analysis",
+    "refactoring",
+    "inventory"
+  ],
+  "categories": [
+    "analysis",
+    "code-quality",
+    "security"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "skills": [
+      {
+        "path": "skills/comby-search/SKILL.md"
+      }
+    ],
+    "commands": [
+      {
+        "path": "commands/comby-search.md"
+      },
+      {
+        "path": "commands/comby-analyze.md"
+      },
+      {
+        "path": "commands/comby-inventory.md"
+      }
+    ],
+    "hooks": [
+      {
+        "id": "comby-pre-tool-use",
+        "name": "Pre-Tool Use Analysis",
+        "description": "Analyze context before tools are executed",
+        "file": "hooks/pre-tool-use.js",
+        "events": [
+          "PreToolUse"
+        ],
+        "enabled": true,
+        "autoInstall": true,
+        "userConfigurable": false
+      },
+      {
+        "id": "comby-post-tool-use",
+        "name": "Post-Tool Use Analysis",
+        "description": "Analyze results after tools complete",
+        "file": "hooks/post-tool-use.js",
+        "events": [
+          "PostToolUse"
+        ],
+        "enabled": true,
+        "autoInstall": true,
+        "userConfigurable": false
+      },
+      {
+        "id": "comby-file-change-analysis",
+        "name": "File Change Analysis",
+        "description": "Auto-analyze when files change in the project",
+        "file": "hooks/file-change-analysis.js",
+        "events": [
+          "FileChange"
+        ],
+        "enabled": false,
+        "autoInstall": true,
+        "userConfigurable": true,
+        "configKey": "comby.hooks.fileChangeAnalysis"
+      },
+      {
+        "id": "comby-pre-commit-analysis",
+        "name": "Pre-Commit Analysis",
+        "description": "Analyze code before git commits",
+        "file": "hooks/pre-commit-analysis.js",
+        "events": [
+          "PreCommit"
+        ],
+        "enabled": false,
+        "autoInstall": true,
+        "userConfigurable": true,
+        "configKey": "comby.hooks.preCommitAnalysis"
+      }
+    ]
+  },
+  "configuration": {
+    "comby.hooks.fileChangeAnalysis": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable automatic analysis when files change"
+    },
+    "comby.hooks.preCommitAnalysis": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable automatic analysis before git commits"
+    },
+    "comby.analysis.securityFocus": {
+      "type": "boolean",
+      "default": true,
+      "description": "Focus analysis on security patterns"
+    },
+    "comby.analysis.excludePatterns": {
+      "type": "array",
+      "default": [
+        "*test*",
+        "*spec*",
+        "node_modules",
+        ".git"
+      ],
+      "description": "Patterns to exclude from analysis"
+    }
+  }
+}

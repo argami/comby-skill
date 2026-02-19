@@ -1,0 +1,229 @@
+{
+  "patterns": [
+    {
+      "id": "sql_injection",
+      "name": "SQL Injection",
+      "pattern": "execute\\s*\\(\\s*['\"]|\\.execute\\(|\\.exec\\(|\\.query\\(|cursor\\.execute",
+      "severity": "critical",
+      "category": "security",
+      "description": "Detects potential SQL injection vulnerabilities",
+      "languages": ["python", "javascript", "php", "ruby"]
+    },
+    {
+      "id": "xss",
+      "name": "Cross-Site Scripting (XSS)",
+      "pattern": "innerHTML|outerHTML|document\\.write|\\.html\\(|v-html",
+      "severity": "high",
+      "category": "security",
+      "description": "Detects potential XSS vulnerabilities",
+      "languages": ["javascript", "typescript"]
+    },
+    {
+      "id": "hardcoded_secrets",
+      "name": "Hardcoded Secrets",
+      "pattern": "(?i)(api[_-]?key|secret[_-]?key|access[_-]?token|auth[_-]?token|password|passwd|pwd|private[_-]?key)",
+      "severity": "critical",
+      "category": "security",
+      "description": "Detects hardcoded API keys, passwords, and secrets",
+      "languages": ["python", "javascript", "go", "ruby", "rust", "php"]
+    },
+    {
+      "id": "command_injection",
+      "name": "Command Injection",
+      "pattern": "os\\.system\\(|os\\.popen\\(|subprocess\\.call\\(|subprocess\\.run\\(|subprocess\\.Popen\\(|shell=True",
+      "severity": "critical",
+      "category": "security",
+      "description": "Detects potential command injection vulnerabilities",
+      "languages": ["python"]
+    },
+    {
+      "id": "unsafe_deserialization",
+      "name": "Unsafe Deserialization",
+      "pattern": "pickle\\.loads\\(|pickle\\.load\\(|yaml\\.load\\(|yaml\\.unsafe_load|marshal\\.loads\\(|eval\\(|exec\\(",
+      "severity": "critical",
+      "category": "security",
+      "description": "Detects unsafe deserialization patterns",
+      "languages": ["python"]
+    },
+    {
+      "id": "path_traversal",
+      "name": "Path Traversal",
+      "pattern": "open\\(|file\\(|Path\\(|os\\.path\\.join\\(|os\\.path\\.abspath",
+      "severity": "high",
+      "category": "security",
+      "description": "Detects potential path traversal vulnerabilities",
+      "languages": ["python", "javascript"]
+    },
+    {
+      "id": "weak_crypto",
+      "name": "Weak Cryptography",
+      "pattern": "md5\\(|hashlib\\.md5|sha1\\(|hashlib\\.sha1|\\.decrypt\\(|DES\\.new\\(|RC4\\.new\\(",
+      "severity": "medium",
+      "category": "security",
+      "description": "Detects weak cryptographic algorithms",
+      "languages": ["python", "javascript"]
+    },
+    {
+      "id": "python_function",
+      "name": "Python Function",
+      "pattern": "def\\s+(\\w+)\\s*\\(",
+      "severity": "low",
+      "category": "code",
+      "description": "Python function definitions",
+      "languages": ["python"]
+    },
+    {
+      "id": "python_class",
+      "name": "Python Class",
+      "pattern": "class\\s+(\\w+)(?:\\(.*?\\))?:",
+      "severity": "low",
+      "category": "code",
+      "description": "Python class definitions",
+      "languages": ["python"]
+    },
+    {
+      "id": "python_import",
+      "name": "Python Import",
+      "pattern": "^(?:from\\s+(\\S+)\\s+import|import\\s+(\\S+))",
+      "severity": "low",
+      "category": "code",
+      "description": "Python import statements",
+      "languages": ["python"]
+    },
+    {
+      "id": "js_function",
+      "name": "JavaScript Function",
+      "pattern": "function\\s+(\\w+)\\s*\\(",
+      "severity": "low",
+      "category": "code",
+      "description": "JavaScript function definitions",
+      "languages": ["javascript"]
+    },
+    {
+      "id": "js_class",
+      "name": "JavaScript Class",
+      "pattern": "class\\s+(\\w+)(?:\\s+extends\\s+\\w+)?\\s*\\{",
+      "severity": "low",
+      "category": "code",
+      "description": "JavaScript class definitions",
+      "languages": ["javascript", "typescript"]
+    },
+    {
+      "id": "js_import",
+      "name": "JavaScript Import",
+      "pattern": "import\\s+(?:(?:\\{[^}]*\\}|\\*\\s+as\\s+\\w+|\\w+)\\s+from\\s+)?['\"]([^'\"]+)['\"]",
+      "severity": "low",
+      "category": "code",
+      "description": "JavaScript import statements",
+      "languages": ["javascript", "typescript"]
+    },
+    {
+      "id": "go_function",
+      "name": "Go Function",
+      "pattern": "func\\s+(?:\\([^)]+\\)\\s+)?(\\w+)\\s*\\(",
+      "severity": "low",
+      "category": "code",
+      "description": "Go function definitions",
+      "languages": ["go"]
+    },
+    {
+      "id": "go_struct",
+      "name": "Go Struct",
+      "pattern": "type\\s+(\\w+)\\s+struct\\s*\\{",
+      "severity": "low",
+      "category": "code",
+      "description": "Go struct definitions",
+      "languages": ["go"]
+    },
+    {
+      "id": "ruby_method",
+      "name": "Ruby Method",
+      "pattern": "def\\s+(\\w+)",
+      "severity": "low",
+      "category": "code",
+      "description": "Ruby method definitions",
+      "languages": ["ruby"]
+    },
+    {
+      "id": "ruby_class",
+      "name": "Ruby Class",
+      "pattern": "class\\s+(\\w+)(?:\\s*<\\s*\\w+)?",
+      "severity": "low",
+      "category": "code",
+      "description": "Ruby class definitions",
+      "languages": ["ruby"]
+    },
+    {
+      "id": "rust_function",
+      "name": "Rust Function",
+      "pattern": "fn\\s+(\\w+)\\s*(?:<[^>]*>)?\\s*\\(",
+      "severity": "low",
+      "category": "code",
+      "description": "Rust function definitions",
+      "languages": ["rust"]
+    },
+    {
+      "id": "rust_struct",
+      "name": "Rust Struct",
+      "pattern": "struct\\s+(\\w+)(?:\\s*<[^>]*>)?\\s*\\{?",
+      "severity": "low",
+      "category": "code",
+      "description": "Rust struct definitions",
+      "languages": ["rust"]
+    },
+    {
+      "id": "php_function",
+      "name": "PHP Function",
+      "pattern": "function\\s+(\\w+)\\s*\\(",
+      "severity": "low",
+      "category": "code",
+      "description": "PHP function definitions",
+      "languages": ["php"]
+    },
+    {
+      "id": "php_class",
+      "name": "PHP Class",
+      "pattern": "class\\s+(\\w+)(?:\\s+extends\\s+\\w+)?(?:\\s+implements\\s+[\\w,\\s]+)?",
+      "severity": "low",
+      "category": "code",
+      "description": "PHP class definitions",
+      "languages": ["php"]
+    },
+    {
+      "id": "todo_comment",
+      "name": "TODO Comment",
+      "pattern": "//\\s*(TODO|FIXME|HACK|XXX):?\\s*.*|#\\s*(TODO|FIXME|HACK|XXX):?\\s*.*",
+      "severity": "low",
+      "category": "quality",
+      "description": "TODO and FIXME comments",
+      "languages": ["python", "javascript", "go", "ruby", "rust", "php"]
+    },
+    {
+      "id": "http_endpoint",
+      "name": "HTTP Endpoint",
+      "pattern": "@app\\.route\\(|@router\\.(get|post|put|delete|patch)|app\\.(get|post|put|delete)\\(",
+      "severity": "low",
+      "category": "api",
+      "description": "HTTP endpoint definitions",
+      "languages": ["python", "javascript"]
+    },
+    {
+      "id": "db_query",
+      "name": "Database Query",
+      "pattern": "execute\\s*\\(|cursor\\.execute|\\.query\\(|db\\.execute",
+      "severity": "low",
+      "category": "database",
+      "description": "Database query calls",
+      "languages": ["python", "javascript"]
+    },
+    {
+      "id": "auth_check",
+      "name": "Authentication Check",
+      "pattern": "@login_required|@auth_required|is_authenticated|jwt_required",
+      "severity": "low",
+      "category": "security",
+      "description": "Authentication and authorization checks",
+      "languages": ["python", "javascript"]
+    }
+  ]
+}

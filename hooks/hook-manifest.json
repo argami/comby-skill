@@ -1,0 +1,133 @@
+{
+  "plugin": "comby-skill",
+  "version": "1.0.0",
+  "description": "Hook definitions for Comby Skill Plugin",
+  "hooks": [
+    {
+      "id": "comby-pre-tool-use",
+      "name": "Pre-Tool Use Analysis",
+      "description": "Analyzes context before tools are executed. Suggests Comby commands when appropriate.",
+      "file": "hooks/pre-tool-use.js",
+      "events": [
+        "PreToolUse"
+      ],
+      "enabled": true,
+      "autoInstall": true,
+      "userConfigurable": false,
+      "priority": "high",
+      "impact": "Provides tips and guidance without blocking execution"
+    },
+    {
+      "id": "comby-post-tool-use",
+      "name": "Post-Tool Use Analysis",
+      "description": "Analyzes results after tools complete. Suggests follow-up actions.",
+      "file": "hooks/post-tool-use.js",
+      "events": [
+        "PostToolUse"
+      ],
+      "enabled": true,
+      "autoInstall": true,
+      "userConfigurable": false,
+      "priority": "high",
+      "impact": "Analyzes tool results and suggests optimizations"
+    },
+    {
+      "id": "comby-file-change-analysis",
+      "name": "File Change Analysis",
+      "description": "Auto-analyzes files when they change in the project.",
+      "file": "hooks/file-change-analysis.js",
+      "events": [
+        "FileChange"
+      ],
+      "enabled": false,
+      "autoInstall": true,
+      "userConfigurable": true,
+      "configKey": "comby.hooks.fileChangeAnalysis",
+      "priority": "medium",
+      "impact": "Runs analysis on file modifications (can impact performance if enabled)"
+    },
+    {
+      "id": "comby-pre-commit-analysis",
+      "name": "Pre-Commit Analysis",
+      "description": "Analyzes code before git commits.",
+      "file": "hooks/pre-commit-analysis.js",
+      "events": [
+        "PreCommit"
+      ],
+      "enabled": false,
+      "autoInstall": true,
+      "userConfigurable": true,
+      "configKey": "comby.hooks.preCommitAnalysis",
+      "priority": "medium",
+      "impact": "Checks staged files for issues before committing"
+    }
+  ],
+  "hookGroups": {
+    "core": [
+      "comby-pre-tool-use",
+      "comby-post-tool-use"
+    ],
+    "optional": [
+      "comby-file-change-analysis",
+      "comby-pre-commit-analysis"
+    ]
+  },
+  "configuration": {
+    "comby.hooks.fileChangeAnalysis": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable automatic analysis when files change",
+      "category": "hooks",
+      "scope": "user-configurable"
+    },
+    "comby.hooks.preCommitAnalysis": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable automatic analysis before git commits",
+      "category": "hooks",
+      "scope": "user-configurable"
+    },
+    "comby.analysis.securityFocus": {
+      "type": "boolean",
+      "default": true,
+      "description": "Focus analysis on security patterns",
+      "category": "analysis",
+      "scope": "global"
+    },
+    "comby.analysis.excludePatterns": {
+      "type": "array",
+      "default": [
+        "*test*",
+        "*spec*",
+        "node_modules",
+        ".git"
+      ],
+      "description": "Patterns to exclude from analysis",
+      "category": "analysis",
+      "scope": "global"
+    }
+  },
+  "installation": {
+    "autoInstallHooks": [
+      "comby-pre-tool-use",
+      "comby-post-tool-use"
+    ],
+    "userOptionalHooks": [
+      "comby-file-change-analysis",
+      "comby-pre-commit-analysis"
+    ],
+    "noHomeModifications": true,
+    "description": "All hooks are installed within the plugin. No modifications to ~/.claude/"
+  },
+  "enabling": {
+    "autoEnabled": [
+      "comby-pre-tool-use",
+      "comby-post-tool-use"
+    ],
+    "disabledByDefault": [
+      "comby-file-change-analysis",
+      "comby-pre-commit-analysis"
+    ],
+    "howToEnable": "Edit ~/.claude/CLAUDE.md and add:\nplugins:\n  comby-skill:\n    config:\n      comby.hooks.fileChangeAnalysis: true\n      comby.hooks.preCommitAnalysis: true"
+  }
+}
